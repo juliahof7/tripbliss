@@ -8,13 +8,19 @@
 
 :root {
   --green-dark: #293B36;
-  --pink: #E8B4A0;
-  --cream: #F5F0E8;
-  --nav-bg: #F5F5EB;
-  --blue: #3B5BDB;
+  --green-mid: #3F7065;
+  --green-gray: #8F9996;
+  --pink: #BE908E;
+  --pink-light: #F6EAE3;
+  --cream: #F5F5EB;
+  --cream-dark: #E1E1C5;
+  --gray-light: #E6E7E8;
+  --blue: #0543FA;
+  --black: #000000;
   --white: #FFFFFF;
-  --text-dark: #1a1a1a;
-  --text-gray: #666666;
+  --text-dark: #000000;
+  --text-gray: #8F9996;
+  --nav-bg: #F5F5EB;
 }
 
 body {

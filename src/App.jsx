@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react'
 import splashBg from './assets/splash-bg.png'
 import { Home, Map, PlusCircle, Search, User, ChevronLeft } from 'lucide-react'
+import cardMyTrips from './assets/card-mytrips.png'
+import cardCreate from './assets/card-create.png'
+import cardBrowse from './assets/card-browse.png'
+import logoHeader from './assets/logo-header.png'
+import logoFloat from './assets/logo-float.png'
 import './App.css'
 
 function App() {
@@ -17,6 +22,9 @@ function App() {
             {currentPage === 'trips' && <TripsPage />}
             {currentPage === 'create' && <CreatePage />}
             {currentPage === 'browse' && <BrowsePage />}
+          </div>
+          <div className="float-logo" onClick={() => setCurrentPage('home')}>
+            <img src={logoFloat} alt="tb" className="float-logo-img" />
           </div>
           <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </>
@@ -86,20 +94,32 @@ function BottomNav({ currentPage, setCurrentPage }) {
 
 function HomePage({ setCurrentPage }) {
   return (
-    <div className="page">
-      <h3 className="section-title">Welcome to TripBliss ✈️</h3>
-      <div className="home-cards">
-        <div className="home-card" onClick={() => setCurrentPage('trips')}>
-          <h4>My Trips</h4>
-          <p>View and manage your trips</p>
+    <div className="page home-page">
+      <div className="home-header">
+        <img src={logoHeader} alt="TripBliss" className="header-logo" />
+        <p className="welcome-text">Welcome, Julia</p>
+      </div>
+
+      <div className="home-grid">
+        <div className="home-card-wrapper">
+          <p className="card-label">My Trips</p>
+          <div className="home-card" onClick={() => setCurrentPage('trips')}>
+            <img src={cardMyTrips} alt="My Trips" className="home-card-img" />
+          </div>
         </div>
-        <div className="home-card" onClick={() => setCurrentPage('create')}>
-          <h4>Create a Trip</h4>
-          <p>Start planning something new</p>
+
+        <div className="home-card-wrapper">
+          <p className="card-label">Create New Trip</p>
+          <div className="home-card" onClick={() => setCurrentPage('create')}>
+            <img src={cardCreate} alt="Create" className="home-card-img" />
+          </div>
         </div>
-        <div className="home-card" onClick={() => setCurrentPage('browse')}>
-          <h4>Browse</h4>
-          <p>Discover new destinations</p>
+
+        <div className="home-card-wrapper center">
+          <p className="card-label">Browse Templates</p>
+          <div className="home-card" onClick={() => setCurrentPage('browse')}>
+            <img src={cardBrowse} alt="Browse" className="home-card-img" />
+          </div>
         </div>
       </div>
     </div>
