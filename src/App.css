@@ -52,6 +52,99 @@
   margin-bottom: 16px;
 }
 
+/* TOP NAV */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: var(--nav-bg);
+  border: 1px solid rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.page-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  text-align: center;
+  flex: 1;
+}
+
+.back-btn, .profile-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px 0;
+  background-color: var(--nav-bg);
+  border: 1px solid rgba(0,0,0,0.1);
+  position: fixed;
+  bottom: 0;
+  width: 390px;
+  z-index: 100;
+}
+
+.nav-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  position: relative;
+  min-width: 60px;
+}
+
+.nav-tab span {
+  font-size: 10px;
+  color: var(--text-gray);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.nav-tab.active span {
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.active-bar {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  background-color: var(--text-dark);
+  border-radius: 2px;
+}
+
+/* NAV ICONS */
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
 /* TRIP CARDS */
 .trip-grid {
   display: grid;
