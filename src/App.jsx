@@ -232,10 +232,62 @@ function CreatePage() {
 }
 
 function BrowsePage() {
+  const [search, setSearch] = useState('')
+
+  const allPhotos = [
+    { id: 1, photo: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400", destination: "Bali, Indonesia" },
+    { id: 2, photo: "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?w=400", destination: "Bali, Indonesia" },
+    { id: 3, photo: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=400", destination: "Bali, Indonesia" },
+    { id: 4, photo: "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=400", destination: "Bali, Indonesia" },
+    { id: 5, photo: "https://images.unsplash.com/photo-1573790387438-4da905039392?w=400", destination: "Bali, Indonesia" },
+    { id: 6, photo: "https://images.unsplash.com/photo-1554931670-4ebfabf6e7a9?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=400", destination: "Bali, Indonesia" },
+    { id: 7, photo: "https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=400", destination: "Bali, Indonesia" },
+    { id: 8, photo: "https://images.unsplash.com/photo-1539367628448-4bc5c9d171c8?w=400", destination: "Bali, Indonesia" },
+    { id: 9, photo: "https://images.unsplash.com/photo-1542259009477-d625272157b7?w=400", destination: "Kauai, Hawaii" },
+    { id: 10, photo: "https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=400", destination: "Kauai, Hawaii" },
+    { id: 11, photo: "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=400", destination: "Kauai, Hawaii" },
+    { id: 12, photo: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400", destination: "Kauai, Hawaii" },
+    { id: 13, photo: "https://images.unsplash.com/photo-1598135753163-6167c1a1ad65?w=400", destination: "Kauai, Hawaii" },
+    { id: 14, photo: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=400", destination: "Kauai, Hawaii" },
+    { id: 15, photo: "https://images.unsplash.com/photo-1471922694854-ff1b63b20054?w=400", destination: "Kauai, Hawaii" },
+    { id: 16, photo: "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=400", destination: "Kauai, Hawaii" },
+    { id: 17, photo: "https://images.unsplash.com/photo-1589197331516-4d84b72ebde3?w=400", destination: "Tahiti, French Polynesia" },
+    { id: 18, photo: "https://images.unsplash.com/photo-1559494007-9f5847c49d94?w=400", destination: "Tahiti, French Polynesia" },
+    { id: 19, photo: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400", destination: "Tahiti, French Polynesia" },
+    { id: 20, photo: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400", destination: "Tahiti, French Polynesia" },
+    { id: 21, photo: "https://images.unsplash.com/photo-1468413253725-0d5181091126?w=400", destination: "Tahiti, French Polynesia" },
+    { id: 22, photo: "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=400", destination: "Tahiti, French Polynesia" },
+    { id: 23, photo: "https://images.unsplash.com/photo-1513415563383-4e580ed27a46?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=400", destination: "Tahiti, French Polynesia" },
+    { id: 24, photo: "https://images.unsplash.com/photo-1703549008444-a60559aa2c07?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=400", destination: "Tahiti, French Polynesia" },
+  ]
+
+  const shuffled = [...allPhotos].sort(() => Math.random() - 0.5)
+
+  const filtered = shuffled.filter(item =>
+    item.destination.toLowerCase().includes(search.toLowerCase())
+  )
+
   return (
-    <div className="page">
-      <h3 className="section-title">Browse</h3>
-      <p>Coming soon...</p>
+    <div className="page browse-page">
+      <div className="search-bar-wrapper">
+        <Search size={16} color="#8F9996" />
+        <input
+          className="search-input"
+          type="text"
+          placeholder="Search destinations..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+      </div>
+
+      <div className="browse-grid">
+        {filtered.map(item => (
+          <div className="browse-card" key={item.id}>
+            <img src={item.photo} alt={item.destination} className="browse-img" />
+            <p className="browse-caption">{item.destination}</p>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
