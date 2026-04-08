@@ -523,7 +523,7 @@ function CreatePage({ setCurrentPage }) {
   )
 }
 
-function BrowsePage() {
+function BrowsePage({ navigateToCard }) {
   const [search, setSearch] = useState('')
 
   const allPhotos = [
@@ -572,14 +572,23 @@ function BrowsePage() {
         />
       </div>
 
-      <div className="browse-grid">
-        {filtered.map(item => (
-          <div className="browse-card" key={item.id}>
-            <img src={item.photo} alt={item.destination} className="browse-img" />
-            <p className="browse-caption">{item.destination}</p>
-          </div>
-        ))}
-      </div>
+    <div className="browse-grid">
+      {filtered.map(item => (
+        <div className="browse-card" key={item.id} onClick={() => navigateToCard({
+          type: "Destination",
+          name: item.destination,
+          photo: item.photo,
+          rating: 4.5,
+          address: "View on Google Maps for details",
+          phone: "N/A",
+          hours: "N/A",
+          website: "https://www.google.com/maps/search/" + item.destination
+        }, 'browse')}>
+          <img src={item.photo} alt={item.destination} className="browse-img" />
+          <p className="browse-caption">{item.destination}</p>
+        </div>
+      ))}
+    </div>
     </div>
   )
 }
