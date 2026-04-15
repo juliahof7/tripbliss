@@ -11,6 +11,8 @@ import passportImg from './assets/Passport.png'
 import mapImg from './assets/Map.png'
 import tripblissImg from './assets/TripBliss.png'
 import profilePic from './assets/icon-profilepic.jpg'
+import overlayBg from './assets/overlay-background.png'
+import tripblissLogo2 from './assets/TripBliss-2.png'
 import './App.css'
 
 function App() {
@@ -19,6 +21,10 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null)
   const [cardSource, setCardSource] = useState(null)
   const [onboardingStep, setOnboardingStep] = useState(0)
+  const [shareContent, setShareContent] = useState(null)
+  const [showSelectBoard, setShowSelectBoard] = useState(false)
+  const [showPostSuccess, setShowPostSuccess] = useState(false)
+  const [showShareSuccess, setShowShareSuccess] = useState(false)
 
   const navigateToCard = (card, source) => {
     setSelectedCard(card)
@@ -51,11 +57,52 @@ function App() {
             {currentPage === 'home' && <HomePage setCurrentPage={setCurrentPage} />}
             {currentPage === 'profile' && <ProfilePage setCurrentPage={setCurrentPage} />}
             {currentPage === 'trips' && <TripsPage setCurrentPage={setCurrentPage} navigateToTrip={navigateToTrip} />}
-            {currentPage === 'tripDetail' && <TripDetailPage trip={selectedTrip} setCurrentPage={setCurrentPage} navigateToCard={navigateToCard} />}
-            {currentPage === 'cardDetail' && <CardDetailPage card={selectedCard} source={cardSource} setCurrentPage={setCurrentPage} />}
+            {currentPage === 'shareBoard' && <ShareBoardPage trip={selectedTrip} setCurrentPage={setCurrentPage} onShare={() => setShowShareSuccess(true)} />}
+            {currentPage === 'shareCard' && <ShareCardPage card={selectedCard} setCurrentPage={setCurrentPage} onShare={() => setShowShareSuccess(true)} />}
+            {currentPage === 'tripDetail' && (
+              <TripDetailPage
+                trip={selectedTrip}
+                setCurrentPage={setCurrentPage}
+                navigateToCard={navigateToCard}
+                onShare={() => setShowShareSuccess(true)}
+              />
+            )}
+            {currentPage === 'cardDetail' && (
+              <CardDetailPage
+                card={selectedCard}
+                source={cardSource}
+                setCurrentPage={setCurrentPage}
+                onAddToBoard={() => setShowSelectBoard(true)}
+                onShare={() => setShowShareSuccess(true)}
+              />
+            )}
             {currentPage === 'create' && <CreatePage setCurrentPage={setCurrentPage} />}
             {currentPage === 'browse' && <BrowsePage navigateToCard={navigateToCard} />}
           </div>
+            {showSelectBoard && (
+              <SelectBoardOverlay
+                setCurrentPage={setCurrentPage}
+                onClose={() => setShowSelectBoard(false)}
+                onSelect={() => {
+                  setShowSelectBoard(false)
+                  setShowPostSuccess(true)
+                }}
+              />
+            )}
+
+            {showPostSuccess && (
+              <PostSuccessOverlay
+                setCurrentPage={setCurrentPage}
+                onClose={() => setShowPostSuccess(false)}
+              />
+            )}
+
+            {showShareSuccess && (
+              <ShareSuccessOverlay
+                setCurrentPage={setCurrentPage}
+                onClose={() => setShowShareSuccess(false)}
+              />
+            )}
           <div className="float-logo" onClick={() => setCurrentPage('home')}>
             <img src={logoFloat} alt="tb" className="float-logo-img" />
           </div>
@@ -259,6 +306,8 @@ function TopNav({ currentPage, setCurrentPage, selectedTrip }) {
     create: 'Create a New Board',
     browse: 'Browse',
     profile: 'Profile / Settings',
+    shareBoard: 'Share Board',
+    shareCard: 'Share Card',
   }
 
   const handleBack = () => {
@@ -487,7 +536,7 @@ function TripBoard({ trip, navigateToTrip }) {
   )
 }
 
-function TripDetailPage({ trip, setCurrentPage, navigateToCard }) {
+function TripDetailPage({ trip, setCurrentPage, navigateToCard, onShare }) {
   if (!trip) return null
 
   const [isEditing, setIsEditing] = useState(false)
@@ -666,14 +715,14 @@ function TripDetailPage({ trip, setCurrentPage, navigateToCard }) {
         </div>
       </div>
 
-      <button className="btn-create-trip">
-        Share Board
-      </button>
+    <button className="btn-create-trip" onClick={() => setCurrentPage('shareBoard')}>
+      Share Board
+    </button>
     </div>
   )
 }
 
-function CardDetailPage({ card, source, setCurrentPage }) {
+function CardDetailPage({ card, source, setCurrentPage, onAddToBoard, onShare }) {
   if (!card) return null
 
   const renderStars = (rating) => {
@@ -700,9 +749,9 @@ function CardDetailPage({ card, source, setCurrentPage }) {
         {source === 'trips' ? (
           <button className="btn-delete" onClick={() => setCurrentPage('tripDetail')}>Delete</button>
         ) : (
-          <button className="btn-create-trip" onClick={() => setCurrentPage('trips')}>Add to Board</button>
+          <button className="btn-create-trip" onClick={onAddToBoard}>Add to Board</button>
         )}
-        <button className="btn-create-trip" onClick={() => alert('Share feature coming soon!')}>
+        <button className="btn-create-trip" onClick={() => setCurrentPage('shareCard')}>
           Share Card
         </button>
       </div>
@@ -823,6 +872,151 @@ function BrowsePage({ navigateToCard }) {
             <p className="browse-caption">{item.destination}</p>
           </div>
         ))}
+      </div>
+    </div>
+  )
+}
+
+function ShareBoardPage({ trip, setCurrentPage, onShare }) {
+  const [instagram, setInstagram] = useState(false)
+  const [facebook, setFacebook] = useState(false)
+
+  const photo = trip?.photos?.[0] || "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800"
+
+  return (
+    <div className="page share-page">
+      <div className="share-card">
+        <p className="share-card-title">I created a trip on TripBliss!</p>
+        <img src={photo} alt="Trip" className="share-card-img" />
+      </div>
+
+      <div className="share-toggles">
+        <div className="share-toggle-row">
+          <div className={`toggle ${instagram ? 'toggle-on' : ''}`} onClick={() => setInstagram(!instagram)}>
+            <div className="toggle-knob" />
+          </div>
+          <p className="share-toggle-label">Share to Instagram.</p>
+        </div>
+        <div className="share-toggle-row">
+          <div className={`toggle ${facebook ? 'toggle-on' : ''}`} onClick={() => setFacebook(!facebook)}>
+            <div className="toggle-knob" />
+          </div>
+          <p className="share-toggle-label">Share to Facebook.</p>
+        </div>
+      </div>
+
+      <button className="btn-create-trip share-post-btn" onClick={() => {
+        onShare()
+        setCurrentPage('tripDetail')
+      }}>
+        Share Post ➤
+      </button>
+    </div>
+  )
+}
+
+function ShareCardPage({ card, setCurrentPage, onShare }) {
+  const [instagram, setInstagram] = useState(false)
+  const [facebook, setFacebook] = useState(false)
+
+  const photo = card?.photo || "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800"
+
+  return (
+    <div className="page share-page">
+      <div className="share-card">
+        <p className="share-card-title">I created a trip card on TripBliss!</p>
+        <img src={photo} alt="Card" className="share-card-img" />
+      </div>
+
+      <div className="share-toggles">
+        <div className="share-toggle-row">
+          <div className={`toggle ${instagram ? 'toggle-on' : ''}`} onClick={() => setInstagram(!instagram)}>
+            <div className="toggle-knob" />
+          </div>
+          <p className="share-toggle-label">Share to Instagram.</p>
+        </div>
+        <div className="share-toggle-row">
+          <div className={`toggle ${facebook ? 'toggle-on' : ''}`} onClick={() => setFacebook(!facebook)}>
+            <div className="toggle-knob" />
+          </div>
+          <p className="share-toggle-label">Share to Facebook.</p>
+        </div>
+      </div>
+
+      <button className="btn-create-trip share-post-btn" onClick={() => {
+        onShare()
+        setCurrentPage('cardDetail')
+      }}>
+        Share Post ➤
+      </button>
+    </div>
+  )
+}
+
+function SelectBoardOverlay({ setCurrentPage, onClose, onSelect }) {
+  const boards = ["Bali, Indonesia", "Kauai, Hawaii", "Tahiti, French Polynesia"]
+
+  return (
+    <div className="overlay">
+      <img src={overlayBg} alt="" className="overlay-bg" />
+      <div className="overlay-content">
+        <button className="overlay-close" onClick={onClose}>✕</button>
+        <p className="overlay-title">Select a Board</p>
+        <div className="overlay-boards">
+          {boards.map(board => (
+            <button key={board} className="overlay-board-btn" onClick={onSelect}>
+              {board}
+            </button>
+          ))}
+          <button className="overlay-board-btn overlay-board-outline" onClick={() => {
+            onClose()
+            setCurrentPage('create')
+          }}>
+            Create New Board
+          </button>
+        </div>
+      </div>
+      <div className="overlay-float-logo" onClick={() => { onClose(); setCurrentPage('home') }}>
+        <img src={logoFloat} alt="tb" className="float-logo-img" />
+      </div>
+    </div>
+  )
+}
+
+function PostSuccessOverlay({ setCurrentPage, onClose }) {
+  return (
+    <div className="overlay">
+      <img src={overlayBg} alt="" className="overlay-bg" />
+      <div className="overlay-content overlay-success">
+        <button className="overlay-close" onClick={onClose}>✕</button>
+        <p className="overlay-success-text">Post Successful!</p>
+        <div className="overlay-logo-circle">
+          <img src={tripblissLogo2} alt="TripBliss" className="overlay-logo-img" />
+        </div>
+        <button className="btn-gray overlay-undo-btn" onClick={onClose}>
+          Undo
+        </button>
+      </div>
+      <div className="overlay-float-logo" onClick={() => { onClose(); setCurrentPage('home') }}>
+        <img src={logoFloat} alt="tb" className="float-logo-img" />
+      </div>
+    </div>
+  )
+}
+
+function ShareSuccessOverlay({ setCurrentPage, onClose }) {
+  return (
+    <div className="overlay">
+      <img src={overlayBg} alt="" className="overlay-bg" />
+      <div className="overlay-content overlay-success">
+        <button className="overlay-close" onClick={onClose}>✕</button>
+        <p className="overlay-success-text">TripBliss Post Shared Successfully!</p>
+        <div className="overlay-logo-circle">
+          <img src={tripblissLogo2} alt="TripBliss" className="overlay-logo-img" />
+        </div>
+      </div>
+      <div className="overlay-float-logo" onClick={() => { onClose(); setCurrentPage('home') }}>
+        <img src={logoFloat} alt="tb" className="float-logo-img" />
       </div>
     </div>
   )
